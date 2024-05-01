@@ -12,17 +12,32 @@ import (
 
 var (
 	expectedBehaviors = Behaviors{
-		ImpossibleTravel: Behavior{
-			Name:        "Impossible Travel",
-			Description: "A user had a successful Access application log in from two locations that they could not have traveled to in that period of time.",
-			RiskLevel:   High,
-			Enabled:     false,
+		Behaviors: map[string]Behavior{
+			"high_dlp": Behavior{
+				Name:        "High Number of DLP Policies Triggered",
+				Description: "User has triggered an active DLP profile in a Gateway policy fifteen times or more within one minute.",
+				RiskLevel:   Low,
+				Enabled:     true,
+			},
+			"imp_travel": Behavior{
+				Name:        "Impossible Travel",
+				Description: "A user had a successful Access application log in from two locations that they could not have traveled to in that period of time.",
+				RiskLevel:   High,
+				Enabled:     false,
+			},
 		},
-		HighDLP: Behavior{
-			Name:        "High Number of DLP Policies Triggered",
-			Description: "User has triggered an active DLP profile in a Gateway policy fifteen times or more within one minute.",
-			RiskLevel:   Low,
-			Enabled:     true,
+	}
+
+	updateBehaviors = Behaviors{
+		Behaviors: map[string]Behavior{
+			"high_dlp": Behavior{
+				RiskLevel: Low,
+				Enabled:   true,
+			},
+			"imp_travel": Behavior{
+				RiskLevel: High,
+				Enabled:   false,
+			},
 		},
 	}
 )
@@ -116,17 +131,6 @@ func TestUpdateBehaviors(t *testing.T) {
 	}
 
 	mux.HandleFunc("/accounts/01a7362d577a6c3019a474fd6f485823/zt_risk_scoring/behaviors", handler)
-
-	updateBehaviors := Behaviors{
-		HighDLP: Behavior{
-			RiskLevel: Low,
-			Enabled:   true,
-		},
-		ImpossibleTravel: Behavior{
-			RiskLevel: High,
-			Enabled:   false,
-		},
-	}
 
 	want := expectedBehaviors
 	actual, err := client.UpdateBehaviors(context.Background(), "01a7362d577a6c3019a474fd6f485823", updateBehaviors)
