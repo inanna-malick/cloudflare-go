@@ -18,23 +18,17 @@ type Behavior struct {
 }
 
 // Wrapper used to have full-fidelity repro of json structure.
-type BehaviorsWrapper struct {
-	Behaviors Behaviors `json:"behaviors"`
-}
-
-// Behaviors represents the two supported types of zt risk behavior.
 type Behaviors struct {
-	ImpossibleTravel Behavior `json:"imp_travel"`
-	HighDLP          Behavior `json:"high_dlp"`
+	Behaviors map[string]Behavior `json:"behaviors"`
 }
 
 // BehaviorResponse represents the response from the zt risk scoring endpoint
 // and contains risk behaviors for an account.
 type BehaviorResponse struct {
-	Success  bool             `json:"success"`
-	Result   BehaviorsWrapper `json:"result"`
-	Errors   []string         `json:"errors"`
-	Messages []string         `json:"messages"`
+	Success  bool      `json:"success"`
+	Result   Behaviors `json:"result"`
+	Errors   []string  `json:"errors"`
+	Messages []string  `json:"messages"`
 }
 
 // Behaviors returns all zero trust risk scoring behaviors for the provided account
@@ -53,7 +47,7 @@ func (api *API) Behaviors(ctx context.Context, accountID string) (Behaviors, err
 	if err != nil {
 		return Behaviors{}, fmt.Errorf("%s: %w", errUnmarshalError, err)
 	}
-	return r.Result.Behaviors, nil
+	return r.Result, nil
 }
 
 // UpdateBehaviors returns all zero trust risk scoring behaviors for the provided account
@@ -63,7 +57,7 @@ func (api *API) Behaviors(ctx context.Context, accountID string) (Behaviors, err
 func (api *API) UpdateBehaviors(ctx context.Context, accountID string, behaviors Behaviors) (Behaviors, error) {
 	uri := fmt.Sprintf("/accounts/%s/zt_risk_scoring/behaviors", accountID)
 
-	res, err := api.makeRequestContext(ctx, http.MethodPut, uri, BehaviorsWrapper{Behaviors: behaviors})
+	res, err := api.makeRequestContext(ctx, http.MethodPut, uri, behaviors)
 	if err != nil {
 		return Behaviors{}, err
 	}
@@ -74,7 +68,7 @@ func (api *API) UpdateBehaviors(ctx context.Context, accountID string, behaviors
 		return Behaviors{}, fmt.Errorf("%s: %w", errUnmarshalError, err)
 	}
 
-	return r.Result.Behaviors, nil
+	return r.Result, nil
 }
 
 type RiskLevel int
