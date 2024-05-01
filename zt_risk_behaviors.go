@@ -9,7 +9,7 @@ import (
 	"github.com/goccy/go-json"
 )
 
-// Behavior represents a single zt risk behavior config
+// Behavior represents a single zt risk behavior config.
 type Behavior struct {
 	Name        string    `json:"name,omitempty"`
 	Description string    `json:"description,omitempty"`
@@ -17,12 +17,12 @@ type Behavior struct {
 	Enabled     bool      `json:"enabled"`
 }
 
-// Wrapper used to have full-fidelity repro of json structure
+// Wrapper used to have full-fidelity repro of json structure.
 type BehaviorsWrapper struct {
 	Behaviors Behaviors `json:"behaviors"`
 }
 
-// Behaviors represents the two types of zt risk behavior
+// Behaviors represents the two supported types of zt risk behavior.
 type Behaviors struct {
 	ImpossibleTravel Behavior `json:"imp_travel"`
 	HighDLP          Behavior `json:"high_dlp"`
