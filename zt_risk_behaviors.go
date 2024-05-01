@@ -17,7 +17,7 @@ type Behavior struct {
 	Enabled     bool      `json:"enabled"`
 }
 
-// todo better name - only used to have full-fidelity repro of json structure
+// Wrapper used to have full-fidelity repro of json structure
 type BehaviorsWrapper struct {
 	Behaviors Behaviors `json:"behaviors"`
 }
@@ -57,7 +57,7 @@ func (api *API) Behaviors(ctx context.Context, accountID string) (Behaviors, err
 }
 
 // UpdateBehaviors returns all zero trust risk scoring behaviors for the provided account
-// NOTE: description/name updates are no-ops, risk_level [low medium high] and enabled [true/false] aren't
+// NOTE: description/name updates are no-ops, risk_level [low medium high] and enabled [true/false] results in modifications
 //
 // API reference: https://developers.cloudflare.com/api/operations/dlp-zt-risk-score-put-behaviors
 func (api *API) UpdateBehaviors(ctx context.Context, accountID string, behaviors Behaviors) (Behaviors, error) {
