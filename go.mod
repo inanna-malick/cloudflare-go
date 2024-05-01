@@ -1,4 +1,4 @@
-module github.com/cloudflare/cloudflare-go
+module github.com/inanna-malick/cloudflare-go
 
 go 1.19
 
